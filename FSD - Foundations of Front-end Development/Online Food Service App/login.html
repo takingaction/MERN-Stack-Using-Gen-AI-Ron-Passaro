@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-sm">
+      <h2 class="text-2xl font-bold text-orange-500 mb-6 text-center">
+        My Food App
+      </h2>
+
+      <form action="dashboard.html" onsubmit="return checkInfo();" method="get">
+        <div class="mb-4">
+          <label
+            for="emailID"
+            class="block text-sm font-semibold text-gray-700 mb-1"
+            >Email</label
+          >
+          <input
+            type="email"
+            placeholder="Enter your email"
+            id="emailID"
+            name="email"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+        <div class="mb-6">
+          <label
+            for="password"
+            class="block text-sm font-semibold text-gray-700 mb-1"
+            >Password</label
+          >
+          <input
+            type="password"
+            placeholder="Enter your password"
+            id="password"
+            name="password"
+            required
+            class="w-full border border-gray-300 rounded px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
+          />
+        </div>
+
+        <div class="flex gap-2">
+          <button
+            type="submit"
+            id="loginBtn"
+            class="flex-1 bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded cursor-pointer"
+          >
+            Login
+          </button>
+          <input
+            type="reset"
+            value="Reset"
+            class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded cursor-pointer"
+          />
+        </div>
+      </form>
+    </div>
+
+    <script src="js/login.js"></script>
+  </body>
+</html>
