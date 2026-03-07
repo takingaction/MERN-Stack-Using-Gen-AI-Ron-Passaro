@@ -44,16 +44,21 @@ fetch(FOOD_URL)
 function displayFood(meals) {
   const foodSelection = document.getElementById("foodSelection");
   meals.forEach((meal) => {
-    let price = Math.floor(Math.random() * 20) + 5; // Random price between $5 and $25
+    let price = Math.floor(Math.random() * 20) + 5;
     const foodCard = document.createElement("div");
     foodCard.innerHTML = `
-      <div class="bg-white p-4 rounded-lg shadow-md">
-        <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="h-48 w-full object-cover rounded-lg"/>
-        <h3 class="text-lg font-semibold">${meal.strMeal}</h3>
-        <p class="text-gray-600">Category: ${meal.strCategory}</p>
-        <p class="text-gray-600">Area: ${meal.strArea}</p>
-        <p class="text-gray-600 text-sm">Price: $${price}</p>
-        <button class="bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded cursor-pointer" onclick="addToCart('${meal.idMeal}', '${meal.strMeal}', ${price})">Add to Cart</button>
+      <div class="bg-white p-4 rounded-lg shadow-md flex flex-col justify-between h-full">
+        <div>
+          <img src="${meal.strMealThumb}" alt="${meal.strMeal}" class="h-48 w-full object-cover rounded-lg mb-3"/>
+          <h3 class="text-lg font-semibold mb-2">${meal.strMeal}</h3>
+          <!-- Display category and area as badges -->
+          <div class="flex gap-2 mb-2"> 
+            <span class="bg-orange-100 text-orange-600 text-xs font-semibold px-2 py-1 rounded-full">${meal.strCategory}</span>
+            <span class="bg-gray-100 text-gray-600 text-xs font-semibold px-2 py-1 rounded-full">${meal.strArea}</span>
+          </div>
+          <p class="text-gray-600 text-sm mb-4">Price: $${price}</p>
+        </div>
+        <button class="w-full bg-orange-500 hover:bg-orange-400 text-white font-bold py-2 px-4 rounded cursor-pointer" onclick="addToCart('${meal.idMeal}', '${meal.strMeal}', ${price})">Add to Cart</button>
       </div>
     `;
     foodSelection.appendChild(foodCard);
