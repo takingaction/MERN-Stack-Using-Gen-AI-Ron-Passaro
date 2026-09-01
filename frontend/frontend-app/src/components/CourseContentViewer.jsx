@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getCourseContent, getLessonVideoUrl } from "../service/lessonService";
 import { markLessonComplete, unmarkLessonComplete, getCourseProgress } from "../service/progressService";
 import CourseChat from "./CourseChat";
+import CourseReviews from "./CourseReviews";
 import Modal from "./Modal";
 
 function CourseContentViewer({ courseId, studentEmail, courseTitle, onClose }) {
@@ -12,6 +13,7 @@ function CourseContentViewer({ courseId, studentEmail, courseTitle, onClose }) {
     let [courseProgress, setCourseProgress] = useState({ completedCount: 0, totalCount: 0, percent: 0 });
     let [expandedChapters, setExpandedChapters] = useState({});
     let [showChatModal, setShowChatModal] = useState(false);
+    let [showReviewsModal, setShowReviewsModal] = useState(false);
 
     useEffect(() => {
         loadContent();
@@ -120,6 +122,12 @@ function CourseContentViewer({ courseId, studentEmail, courseTitle, onClose }) {
                             onClick={() => setShowChatModal(true)}
                         >
                             Chat
+                        </button>
+                        <button
+                            className="button"
+                            onClick={() => setShowReviewsModal(true)}
+                        >
+                            Reviews
                         </button>
                     </div>
                 </div>
@@ -234,6 +242,18 @@ function CourseContentViewer({ courseId, studentEmail, courseTitle, onClose }) {
                 <CourseChat
                     courseId={courseId}
                     userEmail={studentEmail}
+                />
+            </Modal>
+            <Modal
+                isOpen={showReviewsModal}
+                onClose={() => setShowReviewsModal(false)}
+                title="Course Reviews"
+                size="large"
+            >
+                <CourseReviews
+                    courseId={courseId}
+                    studentEmail={studentEmail}
+                    canReview={true}
                 />
             </Modal>
         </div>

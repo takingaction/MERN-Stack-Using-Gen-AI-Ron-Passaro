@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { submitFeedback, checkHasFeedback } from "../../service/feedbackService";
+import { useState, useEffect } from "react";
+import { submitFeedback, checkHasFeedback } from "../service/feedbackService";
 import StarRating from "./StarRating";
+import Modal from "./Modal";
 
 function FeedbackForm({ courseId, studentEmail, onSuccess }) {
     let [rating, setRating] = useState(0);
@@ -8,8 +9,9 @@ function FeedbackForm({ courseId, studentEmail, onSuccess }) {
     let [message, setMessage] = useState("");
     let [loading, setLoading] = useState(false);
     let [alreadyReviewed, setAlreadyReviewed] = useState(false);
+    let [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    useState(() => {
+    useEffect(() => {
         checkIfReviewed();
     }, [courseId, studentEmail]);
 
@@ -40,7 +42,7 @@ function FeedbackForm({ courseId, studentEmail, onSuccess }) {
         try {
             let result = await submitFeedback(courseId, studentEmail, rating, comment);
             if (result.success) {
-                alert("Feedback submitted successfully!");
+                setShowSuccessModal(true);
                 setRating(0);
                 setComment("");
                 setMessage("");
@@ -64,28 +66,37 @@ function FeedbackForm({ courseId, studentEmail, onSuccess }) {
     }
 
     return (
-        <form onSubmit={handleSubmit} style={{ padding: "1rem", background: "#f9f9f9", borderRadius: "8px" }}>
-            <h4>Write a Review</h4>
-            <div style={{ marginBottom: "1rem" }}>
-                <label className="form-label">Rating</label>
-                <StarRating value={rating} onChange={setRating} />
-            </div>
-            <div style={{ marginBottom: "1rem" }}>
-                <label className="form-label">Comment</label>
-                <textarea
-                    className="input-field"
-                    value={comment}
-                    onChange={(e) => setComment(e.target.value)}
-                    placeholder="Share your experience with this course..."
-                    rows="4"
-                    style={{ width: "100%" }}
-                />
-            </div>
-            {message && <p className="msg-error" style={{ marginBottom: "1rem" }}>{message}</p>}
-            <button className="button" type="submit" disabled={loading}>
-                {loading ? "Submitting..." : "Submit Feedback"}
-            </button>
-        </form>
+        <>
+            <form onSubmit={handleSubmit} style={{ padding: "1rem", background: "#f9f9f9", borderRadius: "8px" }}>
+                <h4>Write a Review</h4>
+                <div style={{ marginBottom: "1rem" }}>
+                    <label className="form-label">Rating</label>
+                    <StarRating value={rating} onChange={setRating} />
+                </div>
+                <div style={{ marginBottom: "1rem" }}>
+                    <label className="form-label">Comment</label>
+                    <textarea
+                        className="input-field"
+                        value={comment}
+                        onChange={(e) => setComment(e.target.value)}
+                        placeholder="Share your experience with this course..."
+                        rows="4"
+                        style={{ width: "100%" }}
+                    />
+                </div>
+                {message && <p className="msg-error" style={{ marginBottom: "1rem" }}>{message}</p>}
+                <button className="button" type="submit" disabled={loading}>
+                    {loading ? "Submitting..." : "Submit Feedback"}
+                </button>
+            </form>
+            <Modal
+                isOpen={showSuccessModal}
+                title="Success"
+                onClose={() => setShowSuccessModal(false)}
+            >
+                Feedback submitted successfully!
+            </Modal>
+        </>
     );
 }
 

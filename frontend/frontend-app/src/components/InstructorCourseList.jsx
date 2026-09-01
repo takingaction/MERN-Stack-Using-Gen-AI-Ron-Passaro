@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { getCoursesByInstructor } from "../service/courseService";
 import EditCourse from "./EditCourse";
 import CourseChat from "./CourseChat";
+import CourseReviews from "./CourseReviews";
 import Modal from "./Modal";
 
 function InstructorCourseList() {
@@ -12,6 +13,9 @@ function InstructorCourseList() {
     let [showChatModal, setShowChatModal] = useState(false);
     let [chatCourseId, setChatCourseId] = useState(null);
     let [chatCourseTitle, setChatCourseTitle] = useState("");
+    let [showReviewsModal, setShowReviewsModal] = useState(false);
+    let [reviewsCourseId, setReviewsCourseId] = useState(null);
+    let [reviewsCourseTitle, setReviewsCourseTitle] = useState("");
 
     useEffect(() => {
         loadCourses();
@@ -91,6 +95,16 @@ function InstructorCourseList() {
                                             >
                                                 Chat
                                             </button>
+                                            <button
+                                                className="button"
+                                                onClick={() => {
+                                                    setReviewsCourseId(course._id);
+                                                    setReviewsCourseTitle(course.title);
+                                                    setShowReviewsModal(true);
+                                                }}
+                                            >
+                                                Reviews
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -109,6 +123,20 @@ function InstructorCourseList() {
                     <CourseChat
                         courseId={chatCourseId}
                         userEmail={instructorEmail}
+                    />
+                )}
+            </Modal>
+            <Modal
+                isOpen={showReviewsModal}
+                onClose={() => setShowReviewsModal(false)}
+                title={`Reviews: ${reviewsCourseTitle}`}
+                size="large"
+            >
+                {reviewsCourseId && (
+                    <CourseReviews
+                        courseId={reviewsCourseId}
+                        studentEmail={instructorEmail}
+                        canReview={false}
                     />
                 )}
             </Modal>

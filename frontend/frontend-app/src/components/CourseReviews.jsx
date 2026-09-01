@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getCourseFeedback, getAverageRating } from "../../service/feedbackService";
+import { getCourseFeedback, getAverageRating } from "../service/feedbackService";
 import FeedbackList from "./FeedbackList";
 import FeedbackForm from "./FeedbackForm";
 
