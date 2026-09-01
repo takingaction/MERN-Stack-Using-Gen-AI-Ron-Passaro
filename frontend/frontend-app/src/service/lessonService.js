@@ -102,3 +102,13 @@ export const deleteLesson = async (id) => {
 export const getLessonVideoUrl = (id) => {
     return `${URL}/video/${id}`;
 };
+
+export const getCourseContent = async (courseId) => {
+    try {
+        let result = await axios.get(`${URL}/content/${courseId}`);
+        return result.data;
+    } catch (error) {
+        console.error("Error getting course content:", error);
+        return error.response?.data || { success: false, message: error.message };
+    }
+};

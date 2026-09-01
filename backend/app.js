@@ -11,6 +11,7 @@ const feedbackRoutes = require("./routes/feedbackRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const chapterRoutes = require("./routes/chapterRoutes");
 const lessonRoutes = require("./routes/lessonRoutes");
+const lessonProgressRoutes = require("./routes/lessonProgressRoutes");
 
 const app = express();
 
@@ -43,6 +44,9 @@ app.use("/api/chapters",chapterRoutes);
 
 // http://localhost:3000/api/lessons/*
 app.use("/api/lessons",lessonRoutes);
+
+// http://localhost:3000/api/progress/*
+app.use("/api/progress",lessonProgressRoutes);
 
 userService.createAdminUser("admin@gmail.com","admin@123","admin");
 app.listen(3000, () => {

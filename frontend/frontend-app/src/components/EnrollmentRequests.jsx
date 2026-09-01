@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { getPendingForInstructor, approveEnrollment, rejectEnrollment } from "../service/enrollmentService";
 import { viewAllCourses } from "../service/courseService";
+import Modal from "./Modal";
+import ConfirmModal from "./ConfirmModal";
 
 function EnrollmentRequests() {
     let instructorEmail = sessionStorage.getItem("instructorEmail");
     let [pendingRequests, setPendingRequests] = useState([]);
     let [courses, setCourses] = useState([]);
     let [message, setMessage] = useState("");
+    let [showConfirmModal, setShowConfirmModal] = useState(false);
+    let [showResultModal, setShowResultModal] = useState(false);
+    let [selectedRequest, setSelectedRequest] = useState(null);
+    let [actionType, setActionType] = useState(null);
+    let [resultMessage, setResultMessage] = useState("");
 
     useEffect(() => {
         loadPendingRequests();
@@ -44,31 +51,37 @@ function EnrollmentRequests() {
         return course ? course.title : courseId;
     };
 
-    let handleApprove = async (enrollmentId) => {
-        try {
-            let result = await approveEnrollment(enrollmentId, instructorEmail);
-            if (result.success) {
-                alert("Enrollment approved successfully!");
-                loadPendingRequests();
-            } else {
-                alert(result.message);
-            }
-        } catch (error) {
-            console.error("Error approving enrollment:", error);
-        }
+    let handleActionClick = (request, action) => {
+        setSelectedRequest(request);
+        setActionType(action);
+        setShowConfirmModal(true);
     };
 
-    let handleReject = async (enrollmentId) => {
+    let handleConfirm = async () => {
+        if (!selectedRequest || !actionType) return;
+        setShowConfirmModal(false);
+
         try {
-            let result = await rejectEnrollment(enrollmentId, instructorEmail);
+            let result;
+            if (actionType === "approve") {
+                result = await approveEnrollment(selectedRequest._id, instructorEmail);
+            } else {
+                result = await rejectEnrollment(selectedRequest._id, instructorEmail);
+            }
+
             if (result.success) {
-                alert("Enrollment rejected!");
+                setResultMessage(actionType === "approve"
+                    ? "Enrollment approved successfully!"
+                    : "Enrollment rejected!");
                 loadPendingRequests();
             } else {
-                alert(result.message);
+                setResultMessage(result.message);
             }
+            setShowResultModal(true);
         } catch (error) {
-            console.error("Error rejecting enrollment:", error);
+            console.error(`Error ${actionType}ing enrollment:`, error);
+            setResultMessage("An error occurred. Please try again.");
+            setShowResultModal(true);
         }
     };
 
@@ -99,14 +112,14 @@ function EnrollmentRequests() {
                                     <td>
                                         <button
                                             className="button success"
-                                            onClick={() => handleApprove(request._id)}
+                                            onClick={() => handleActionClick(request, "approve")}
                                             style={{ marginRight: "0.5rem" }}
                                         >
                                             Approve
                                         </button>
                                         <button
                                             className="button error"
-                                            onClick={() => handleReject(request._id)}
+                                            onClick={() => handleActionClick(request, "reject")}
                                         >
                                             Reject
                                         </button>
@@ -117,6 +130,21 @@ function EnrollmentRequests() {
                     </table>
                 </div>
             )}
+            <ConfirmModal
+                isOpen={showConfirmModal}
+                title={actionType === "approve" ? "Confirm Approval" : "Confirm Rejection"}
+                message={`Are you sure you want to ${actionType} enrollment for "${selectedRequest?.studentEmail}"?`}
+                onClose={() => setShowConfirmModal(false)}
+                onConfirm={handleConfirm}
+                confirmText={actionType === "approve" ? "Approve" : "Reject"}
+            />
+            <Modal
+                isOpen={showResultModal}
+                title={actionType === "approve" ? "Approved" : "Rejected"}
+                onClose={() => setShowResultModal(false)}
+            >
+                {resultMessage}
+            </Modal>
         </div>
     );
 }

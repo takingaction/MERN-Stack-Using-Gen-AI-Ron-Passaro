@@ -153,6 +153,23 @@ const deleteLesson = async (req, res) => {
     }
 };
 
+const getCourseContent = async (req, res) => {
+    try {
+        const { courseId } = req.params;
+        const content = await lessonService.getCourseContent(courseId);
+        res.status(200).json({
+            success: true,
+            data: content,
+            message: "Course content retrieved successfully"
+        });
+    } catch (error) {
+        res.status(200).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
+
 module.exports = {
     createLesson,
     getLessonsByChapter,
@@ -161,5 +178,6 @@ module.exports = {
     getLessonVideo,
     updateLesson,
     reorderLessons,
-    deleteLesson
+    deleteLesson,
+    getCourseContent
 };

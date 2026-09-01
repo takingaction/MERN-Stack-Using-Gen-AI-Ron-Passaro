@@ -7,6 +7,7 @@ const lessonController = require("../controllers/lessonController");
 
 router.post("/create", upload.single("video"), lessonController.createLesson);
 router.get("/chapter/:chapterId", lessonController.getLessonsByChapter);
+router.get("/content/:courseId", lessonController.getCourseContent);
 router.get("/course/:courseId", lessonController.getLessonsByCourse);
 router.get("/get/:id", lessonController.getLessonById);
 router.get("/video/:id", lessonController.getLessonVideo);

@@ -144,6 +144,31 @@ const getLessonVideo = async (lessonId) => {
     };
 };
 
+const getCourseContent = async (courseId) => {
+    const chapters = await chapterRepository.findByCourseId(courseId);
+    const result = [];
+
+    for (const chapter of chapters) {
+        const lessons = await lessonRepository.findByChapterId(chapter._id);
+        result.push({
+            _id: chapter._id,
+            title: chapter.title,
+            order: chapter.order,
+            lessons: lessons.map(l => ({
+                _id: l._id,
+                title: l.title,
+                type: l.type,
+                content: l.content || "",
+                fileName: l.fileName,
+                mimeType: l.mimeType,
+                order: l.order
+            }))
+        });
+    }
+
+    return result;
+};
+
 module.exports = {
     createLesson,
     getLessonsByChapter,
@@ -153,5 +178,6 @@ module.exports = {
     reorderLessons,
     deleteLesson,
     deleteLessonsByCourse,
-    getLessonVideo
+    getLessonVideo,
+    getCourseContent
 };
