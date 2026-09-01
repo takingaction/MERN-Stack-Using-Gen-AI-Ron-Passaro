@@ -1,12 +1,17 @@
 import { useState, useEffect } from "react";
 import { getCoursesByInstructor } from "../service/courseService";
 import EditCourse from "./EditCourse";
+import CourseChat from "./CourseChat";
+import Modal from "./Modal";
 
 function InstructorCourseList() {
     let instructorEmail = sessionStorage.getItem("instructorEmail");
     let [courses, setCourses] = useState([]);
     let [message, setMessage] = useState("");
     let [editingCourse, setEditingCourse] = useState(null);
+    let [showChatModal, setShowChatModal] = useState(false);
+    let [chatCourseId, setChatCourseId] = useState(null);
+    let [chatCourseTitle, setChatCourseTitle] = useState("");
 
     useEffect(() => {
         loadCourses();
@@ -69,12 +74,24 @@ function InstructorCourseList() {
                                     <td>{course.description}</td>
                                     <td>{course.duration} hrs</td>
                                     <td>
-                                        <button
-                                            className="button"
-                                            onClick={() => setEditingCourse(course._id)}
-                                        >
-                                            Edit
-                                        </button>
+                                        <div style={{ display: "flex", gap: "0.5rem" }}>
+                                            <button
+                                                className="button"
+                                                onClick={() => setEditingCourse(course._id)}
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                className="button"
+                                                onClick={() => {
+                                                    setChatCourseId(course._id);
+                                                    setChatCourseTitle(course.title);
+                                                    setShowChatModal(true);
+                                                }}
+                                            >
+                                                Chat
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
@@ -82,6 +99,19 @@ function InstructorCourseList() {
                     </table>
                 </div>
             )}
+            <Modal
+                isOpen={showChatModal}
+                onClose={() => setShowChatModal(false)}
+                title={`Chat: ${chatCourseTitle}`}
+                size="large"
+            >
+                {chatCourseId && (
+                    <CourseChat
+                        courseId={chatCourseId}
+                        userEmail={instructorEmail}
+                    />
+                )}
+            </Modal>
         </div>
     );
 }

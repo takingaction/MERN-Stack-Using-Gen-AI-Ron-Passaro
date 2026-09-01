@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { getCourseContent, getLessonVideoUrl } from "../service/lessonService";
 import { markLessonComplete, unmarkLessonComplete, getCourseProgress } from "../service/progressService";
+import CourseChat from "./CourseChat";
+import Modal from "./Modal";
 
 function CourseContentViewer({ courseId, studentEmail, courseTitle, onClose }) {
     let [chapters, setChapters] = useState([]);
@@ -9,6 +11,7 @@ function CourseContentViewer({ courseId, studentEmail, courseTitle, onClose }) {
     let [loading, setLoading] = useState(true);
     let [courseProgress, setCourseProgress] = useState({ completedCount: 0, totalCount: 0, percent: 0 });
     let [expandedChapters, setExpandedChapters] = useState({});
+    let [showChatModal, setShowChatModal] = useState(false);
 
     useEffect(() => {
         loadContent();
@@ -112,6 +115,12 @@ function CourseContentViewer({ courseId, studentEmail, courseTitle, onClose }) {
                         <div style={{ width: "100px", height: "8px", background: "#eee", borderRadius: "4px" }}>
                             <div style={{ width: `${courseProgress.percent}%`, height: "100%", background: courseProgress.percent === 100 ? "#4CAF50" : "#2196F3", borderRadius: "4px" }} />
                         </div>
+                        <button
+                            className="button"
+                            onClick={() => setShowChatModal(true)}
+                        >
+                            Chat
+                        </button>
                     </div>
                 </div>
             </div>
@@ -216,6 +225,17 @@ function CourseContentViewer({ courseId, studentEmail, courseTitle, onClose }) {
                     )}
                 </div>
             </div>
+            <Modal
+                isOpen={showChatModal}
+                onClose={() => setShowChatModal(false)}
+                title="Course Chat"
+                size="large"
+            >
+                <CourseChat
+                    courseId={courseId}
+                    userEmail={studentEmail}
+                />
+            </Modal>
         </div>
     );
 }
