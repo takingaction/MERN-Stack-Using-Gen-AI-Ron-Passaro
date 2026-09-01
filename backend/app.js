@@ -9,6 +9,8 @@ const enrollmentRoutes = require("./routes/enrollmentRoutes");
 const materialRoutes = require("./routes/materialRoutes");
 const feedbackRoutes = require("./routes/feedbackRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const chapterRoutes = require("./routes/chapterRoutes");
+const lessonRoutes = require("./routes/lessonRoutes");
 
 const app = express();
 
@@ -35,6 +37,12 @@ app.use("/api/feedbacks",feedbackRoutes);
 
 // http://localhost:3000/api/chats/*
 app.use("/api/chats",chatRoutes);
+
+// http://localhost:3000/api/chapters/*
+app.use("/api/chapters",chapterRoutes);
+
+// http://localhost:3000/api/lessons/*
+app.use("/api/lessons",lessonRoutes);
 
 userService.createAdminUser("admin@gmail.com","admin@123","admin");
 app.listen(3000, () => {

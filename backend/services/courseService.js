@@ -3,6 +3,8 @@ const enrollmentRepository = require("../repositories/enrollmentRepository");
 const materialRepository = require("../repositories/materialRepository");
 const feedbackRepository = require("../repositories/feedbackRepository");
 const chatRepository = require("../repositories/chatRepository");
+const chapterService = require("./chapterService");
+const lessonService = require("./lessonService");
 const mongoose = require("mongoose");
 const { GridFSBucket } = require("mongodb");
 const { getDb } = require("../config/db");
@@ -90,6 +92,12 @@ const deleteCourse = async (id) => {
 
     await feedbackRepository.deleteByCourseId(id);
     console.log("Deleted feedback");
+
+    await lessonService.deleteLessonsByCourse(id);
+    console.log("Deleted lessons");
+
+    await chapterService.deleteChaptersByCourse(id);
+    console.log("Deleted chapters");
 
     let chatRoom = await chatRepository.findByCourseId(id);
     console.log("Chat room found:", chatRoom);
